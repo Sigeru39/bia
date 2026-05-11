@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para Bia</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#fbf7f2;
+      --bg-2:#f5eee6;
+      --paper:rgba(255,255,255,.78);
+      --paper-solid:#fffaf6;
+      --text:#5f4e45;
+      --soft:#867167;
+      --title:#765846;
+      --accent:#b98268;
+      --accent-2:#d7ad98;
+      --cream:#fff7f0;
+      --line:rgba(118,88,70,.14);
+      --shadow:0 24px 70px rgba(101,69,48,.12);
+      --shadow-soft:0 14px 40px rgba(101,69,48,.09);
+      --radius-xl:38px;
+      --radius-lg:28px;
+      --max:1180px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      min-height:100vh;
+      font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 6% 6%, rgba(216,173,152,.26), transparent 25%),
+        radial-gradient(circle at 90% 18%, rgba(235,209,193,.32), transparent 24%),
+        radial-gradient(circle at 72% 90%, rgba(191,133,104,.15), transparent 26%),
+        linear-gradient(180deg,#fffdfb 0%, var(--bg) 38%, var(--bg-2) 100%);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:999;
+      pointer-events:none;
+      opacity:.075;
+      mix-blend-mode:multiply;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='.9'/></svg>");
+    }
+
+    img,video{display:block;max-width:100%}
+    button{font-family:inherit}
+    .container{width:min(var(--max),calc(100% - 32px));margin:0 auto}
+    .section{padding:clamp(64px,8vw,112px) 0}
+
+    h1,h2,h3{
+      font-family:'Cormorant Garamond',Georgia,serif;
+      font-weight:500;
+      color:var(--title);
+      letter-spacing:-.035em;
+      line-height:.96;
+    }
+
+    .eyebrow{
+      display:inline-block;
+      margin-bottom:14px;
+      color:var(--accent);
+      font-size:.76rem;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    .btn{
+      border:0;
+      cursor:pointer;
+      border-radius:999px;
+      padding:15px 24px;
+      font-size:.78rem;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      transition:.28s ease;
+      white-space:nowrap;
+    }
+    .btn-primary{color:#fff;background:linear-gradient(135deg,#c9987d,#a66f55);box-shadow:0 16px 34px rgba(166,111,85,.22)}
+    .btn-secondary{color:var(--title);background:rgba(255,255,255,.76);border:1px solid var(--line)}
+    .btn:hover{transform:translateY(-2px)}
+
+    .intro{
+      position:fixed;
+      inset:0;
+      z-index:100;
+      min-height:100svh;
+      display:grid;
+      place-items:center;
+      padding:24px;
+      overflow:hidden;
+      transition:opacity 1s ease,visibility 1s ease,transform 1s ease;
+    }
+    body.entered .intro{opacity:0;visibility:hidden;transform:scale(1.02);pointer-events:none}
+    .intro-bg{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg,rgba(255,252,249,.78),rgba(255,250,246,.54)),
+        url('assets/photos/foto-01.jpeg') center 24%/cover no-repeat;
+      filter:saturate(.94) contrast(1.02);
+      transform:scale(1.03);
+    }
+    .intro-card{
+      position:relative;
+      z-index:2;
+      width:min(720px,100%);
+      text-align:center;
+      padding:clamp(34px,6vw,64px);
+      border-radius:var(--radius-xl);
+      background:rgba(255,255,255,.66);
+      border:1px solid rgba(255,255,255,.82);
+      backdrop-filter:blur(18px);
+      box-shadow:var(--shadow);
+    }
+    .intro-card h1{font-size:clamp(3.8rem,10vw,7.4rem);margin-bottom:18px}
+    .intro-card p{max-width:570px;margin:0 auto 30px;color:var(--soft);font-size:clamp(1rem,2vw,1.16rem);line-height:1.75}
+
+    .site{opacity:0;transform:translateY(18px);transition:opacity 1s ease,transform 1s ease;pointer-events:none}
+    body.entered .site{opacity:1;transform:translateY(0);pointer-events:auto}
+
+    .hero{padding-top:40px}
+    .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center}
+    .glass-card{
+      background:var(--paper);
+      border:1px solid rgba(255,255,255,.84);
+      backdrop-filter:blur(14px);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow-soft);
+    }
+    .hero-copy{padding:clamp(28px,4.8vw,54px)}
+    .hero-copy h2{font-size:clamp(3rem,6.5vw,6rem);margin-bottom:18px}
+    .hero-copy p{color:var(--soft);font-size:clamp(1rem,1.6vw,1.12rem);line-height:1.85;margin-bottom:18px}
+    .hero-quote{margin-top:24px;padding-left:18px;border-left:2px solid rgba(185,130,104,.34);font-style:italic;color:#82675a;line-height:1.8}
+
+    .hero-photo{
+      position:relative;
+      min-height:clamp(520px,72vh,760px);
+      overflow:hidden;
+      border-radius:var(--radius-xl);
+      background:#efe7df;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.84);
+    }
+    .hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transform:scale(1.035);transition:opacity 1.35s ease,transform 7s ease}
+    .hero-photo img.active{opacity:1;transform:scale(1)}
+    .hero-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(255,252,249,.20),transparent 46%);pointer-events:none}
+
+    .letter-card{padding:clamp(30px,5vw,64px);position:relative;overflow:hidden}
+    .letter-card::before{content:"";position:absolute;right:-80px;top:-80px;width:250px;height:250px;border-radius:50%;background:rgba(216,173,152,.16)}
+    .section-header{text-align:center;max-width:820px;margin:0 auto 34px;position:relative}
+    .section-header h2{font-size:clamp(2.8rem,6vw,5.2rem);margin-bottom:12px}
+    .section-header p{color:var(--soft);line-height:1.75}
+    .letter-text{position:relative;max-width:830px;margin:0 auto;font-size:clamp(1.02rem,1.35vw,1.13rem);line-height:1.95;color:#66554c}
+    .letter-text p{margin-bottom:22px}
+
+    .gallery-stage{
+      position:relative;
+      height:min(82vh,860px);
+      min-height:560px;
+      border-radius:var(--radius-xl);
+      overflow:hidden;
+      background:#efe7df;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.84);
+    }
+    .gallery-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.35s ease;overflow:hidden;background:#efe7df}
+    .gallery-slide.active{opacity:1;z-index:2}
+    .slide-bg{position:absolute;inset:-32px;background-size:cover;background-position:center;filter:blur(24px) saturate(.95);transform:scale(1.08);opacity:.42}
+    .slide-bg::after{content:"";position:absolute;inset:0;background:rgba(255,250,246,.44)}
+    .slide-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:clamp(10px,2vw,22px);filter:drop-shadow(0 18px 28px rgba(83,56,40,.14));transform:scale(1.015);transition:transform 7s ease}
+    .gallery-slide.active .slide-img{transform:scale(1)}
+    .gallery-meta{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:18px;padding:0 4px}
+    .gallery-counter{color:var(--soft);font-size:.92rem}
+    .gallery-dots{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+    .dot{width:9px;height:9px;border:0;border-radius:99px;background:rgba(185,130,104,.25);cursor:pointer;transition:.25s ease}
+    .dot.active{width:34px;background:linear-gradient(135deg,#c9987d,#a66f55)}
+
+    .sound-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:28px;align-items:stretch}
+    .sound-card,.video-card{padding:clamp(24px,4vw,38px)}
+    .sound-card h2,.video-card h2{font-size:clamp(2.5rem,5vw,4.2rem);margin-bottom:12px}
+    .sound-card p,.video-card p{line-height:1.75;color:var(--soft)}
+    .track-now{margin-top:26px;margin-bottom:10px;color:var(--accent);font-size:.76rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+    .track-title{font-family:'Cormorant Garamond',Georgia,serif;color:var(--title);font-size:clamp(2rem,4vw,3rem);line-height:1;margin-bottom:14px}
+    .audio-note{margin-top:14px;font-size:.92rem;color:#9a7c6e}
+    .audio-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+    .spotify-placeholder{height:352px;border-radius:24px;border:1px dashed rgba(185,130,104,.28);display:grid;place-items:center;text-align:center;padding:24px;background:rgba(255,255,255,.42);color:var(--soft);line-height:1.7}
+    .spotify-embed{width:100%;height:352px;border:0;border-radius:18px;background:#f3ece5}
+
+    .video-frame{margin-top:24px;border-radius:28px;overflow:hidden;background:#efe7df;box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.82)}
+    .video-frame video{width:100%;height:auto;max-height:78vh;object-fit:contain;background:#f3ece5}
+    .video-shell{position:relative;display:grid;place-items:center}
+    .video-shell::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(62,42,32,.05),rgba(62,42,32,.28));pointer-events:none;transition:.35s ease}
+    .video-shell.is-playing::after{opacity:0}
+    .video-play{position:absolute;z-index:3;display:flex;align-items:center;gap:14px;border:1px solid rgba(255,255,255,.72);border-radius:999px;padding:12px 20px 12px 12px;background:rgba(255,255,255,.78);backdrop-filter:blur(14px);box-shadow:0 18px 45px rgba(71,45,32,.20);color:var(--title);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.76rem;cursor:pointer;transition:.28s ease}
+    .video-play:hover{transform:translateY(-2px) scale(1.015);background:rgba(255,255,255,.88)}
+    .video-shell.is-playing .video-play{opacity:0;transform:scale(.94);pointer-events:none}
+    .play-circle{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#c9987d,#a66f55);box-shadow:0 10px 24px rgba(166,111,85,.24)}
+    .play-triangle{width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:14px solid white;margin-left:4px}
+    .play-text{white-space:nowrap}
+
+    footer{padding:56px 0 86px;text-align:center;color:#9b8072;font-style:italic}
+    .floating-audio{position:fixed;right:18px;bottom:18px;z-index:60;display:flex;gap:10px;padding:10px;border-radius:999px;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.84);backdrop-filter:blur(14px);box-shadow:var(--shadow-soft);opacity:0;transform:translateY(10px);pointer-events:none;transition:.35s ease}
+    body.entered .floating-audio{opacity:1;transform:translateY(0);pointer-events:auto}
+    .floating-audio .btn{padding:12px 15px;font-size:.7rem}
+
+    @media (max-width:980px){
+      .hero-grid,.sound-grid{grid-template-columns:1fr}
+      .hero{padding-top:22px}
+      .hero-photo{min-height:620px}
+      .gallery-stage{height:78vh}
+    }
+    @media (max-width:640px){
+      .container{width:min(100% - 24px,var(--max))}
+      .section{padding:58px 0}
+      .intro{padding:16px}
+      .intro-card{border-radius:28px;padding:34px 22px}
+      .hero-photo{min-height:520px;border-radius:28px}
+      .glass-card,.gallery-stage{border-radius:28px}
+      .gallery-stage{min-height:490px;height:70vh}
+      .gallery-meta{justify-content:center;text-align:center}
+      .slide-img{padding:8px}
+      .audio-actions{display:grid;grid-template-columns:1fr;width:100%}
+      .btn{width:100%;text-align:center}
+      .floating-audio{left:12px;right:12px;justify-content:center}
+      .floating-audio .btn{width:auto}
+    }
+  </style>
+</head>
+<body>
+  <section class="intro" id="intro">
+    <div class="intro-bg"></div>
+    <div class="intro-card">
+      <span class="eyebrow">Uma homenagem para você</span>
+      <h1>Bia</h1>
+      <p>Algumas coisas são grandes demais para serem ditas em voz alta sem que a emoção tome conta. Então hoje eu te escrevo.</p>
+      <button class="btn btn-primary" id="enterBtn">Entrar na homenagem</button>
+    </div>
+  </section>
+
+  <main class="site">
+    <section class="section hero">
+      <div class="container hero-grid">
+        <div class="hero-copy glass-card">
+          <span class="eyebrow">Meu amor</span>
+          <h2>Deus nos amou primeiro.</h2>
+          <p>E nada é pequeno se for feito com amor.</p>
+          <p>Essa homenagem nasce dessas duas frases e de tudo o que elas me lembram quando penso em você.</p>
+          <div class="hero-quote">Nas duas, o amor é a palavra central. E é impossível pensar nisso sem pensar em você.</div>
+        </div>
+        <div class="hero-photo" id="heroSlider" aria-label="Fotos principais"></div>
+      </div>
+    </section>
+
+    <section class="section" id="carta">
+      <div class="container">
+        <div class="letter-card glass-card">
+          <div class="section-header">
+            <span class="eyebrow">Carta</span>
+            <h2>Minha carta para você</h2>
+            <p>Uma homenagem escrita com amor, lembrança, fé e gratidão.</p>
+          </div>
+          <div class="letter-text">
+            <p>Meu amor,</p>
+            <p>Ultimamente eu não consigo mais falar muitas coisas, porque minha voz acaba ficando embargada e eu me perco nas palavras. Então hoje eu resolvi te escrever.</p>
+            <p>E eu escrevo baseado em duas frases que sempre me guiaram:</p>
+            <p>“Deus nos amou primeiro.”<br>E: “Nada é pequeno se for feito com amor.”</p>
+            <p>Nas duas, o amor é a palavra central. E é impossível pensar nisso sem pensar em você.</p>
+            <p>Eu vejo esse amor em tudo o que você é: como mulher, como esposa, como profissional, como líder, como filha, como amiga e também naquela menina cheia de sonhos que existe dentro de você desde sempre.</p>
+            <p>Hoje eu vejo essa mulher realizando o sonho de viver da fotografia, estudando, treinando, se dedicando e indo atrás daquilo que ama. E, ao mesmo tempo, vejo a esposa que ilumina os meus dias, que me guia, me acolhe e me faz sentir amado de uma forma que eu nunca imaginei viver.</p>
+            <p>Também vejo a mãe.</p>
+            <p>Uma mãe forte, amorosa e corajosa, que precisou aprender muito cedo a enfrentar a dor, a lidar com perdas e a continuar caminhando mesmo quando o coração estava cansado.</p>
+            <p>Você sempre foi o reflexo do amor de Deus. Sempre soube amar primeiro. Sempre soube cuidar, perceber, acolher e fazer algo por alguém antes mesmo que a pessoa pedisse ajuda.</p>
+            <p>Porque existe em você um amor que transborda. Um amor maior do que cabe em palavras.</p>
+            <p>E a segunda frase, “nada é pequeno se for feito com amor”, talvez seja a definição mais bonita de quem você é.</p>
+            <p>Você transforma detalhes em demonstrações de carinho. Faz as pessoas se sentirem amadas nas pequenas coisas. Consegue transformar o cotidiano em algo especial. Você leva amor para os lugares sem nem perceber.</p>
+            <p>E talvez uma das minhas maiores dores seja ver o quanto, às vezes, o peso da vida faz com que essas pequenas coisas apenas aconteçam para você. Ver o quanto você sente tudo profundamente, o quanto carrega dores em silêncio e como, aos poucos, algumas coisas que antes brilhavam nos seus olhos acabam perdendo a cor.</p>
+            <p>Mas, mesmo assim, você continua.</p>
+            <p>E é justamente isso que mais me impressiona.</p>
+            <p>Depois de tudo o que você viveu, de tudo o que enfrentou e ainda enfrenta, olhar para você só me faz admirar ainda mais a mulher incrível que você é. A sua capacidade de enfrentar a dor, de cair e conseguir se levantar novamente, é algo que me marca profundamente.</p>
+            <p>Muitas pessoas já falaram sobre o tamanho da sua fortaleza, mas acho que ninguém entende isso tão profundamente quanto quem vive ao seu lado.</p>
+            <p>Porque mesmo em meio à sua própria dor, você ainda conseguiu me dar força quando eu não consegui ser forte. Quando eu não tive estrutura para suportar tudo aquilo, porque o impacto em mim também foi enorme, você ainda estava ali.</p>
+            <p>E eu nunca vou esquecer disso.</p>
+            <p>Hoje, e para sempre, eu só quero estar ao seu lado. Quero cuidar de você, te apoiar, te ajudar a carregar os pesos da vida e fazer de tudo para te dar a vida linda que você merece viver.</p>
+            <p>Quero que você nunca deixe de sonhar. Nunca deixe de acreditar nessa mulher apaixonada, verdadeira, intensa e cheia de amor que você é.</p>
+            <p>Que você continue sendo reflexo do amor de Deus. Que continue enchendo os lugares de luz, transformando momentos simples em lembranças eternas e fazendo as pessoas se sentirem especiais apenas pela forma como você ama.</p>
+            <p>Você é incrível.</p>
+            <p>E sempre será.</p>
+            <p>Eu te amo muito.</p>
+            <p>Feliz Dia das Mães.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="galeria">
+      <div class="container">
+        <div class="section-header">
+          <span class="eyebrow">Galeria</span>
+          <h2>Nossos momentos</h2>
+          <p>As fotos aparecem uma por vez, com transição suave, em uma moldura clara e delicada para funcionar bem no computador e no celular.</p>
+        </div>
+        <div class="gallery-stage" id="galleryStage" aria-label="Galeria de fotos"></div>
+        <div class="gallery-meta">
+          <div class="gallery-counter" id="galleryCounter">1 / 18</div>
+          <div class="gallery-dots" id="galleryDots"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="trilha">
+      <div class="container sound-grid">
+        <div class="sound-card glass-card">
+          <span class="eyebrow">Trilha sonora</span>
+          <h2>Nossa playlist</h2>
+          <p>A homenagem começa com <strong>Woman</strong> e depois segue com <strong>With Arms Wide Open</strong>.</p>
+          <div class="track-now">Tocando agora</div>
+          <div class="track-title" id="trackTitle">Woman — Mumford & Sons</div>
+          <p class="audio-note" id="audioNote">Para a música tocar, coloque os MP3s em assets/audio/ com os nomes woman.mp3 e with-arms-wide-open.mp3.</p>
+          <div class="audio-actions">
+            <button class="btn btn-primary" id="toggleMusicBtn">Pausar música</button>
+            <button class="btn btn-secondary" id="restartMusicBtn">Recomeçar</button>
+          </div>
+        </div>
+        <div class="sound-card glass-card">
+          <span class="eyebrow">Spotify</span>
+          <h2>Nossa trilha sonora</h2>
+          <iframe data-testid="embed-iframe" class="spotify-embed" style="border-radius:18px" src="https://open.spotify.com/embed/playlist/14tvXMMviAhl9U2rCHrPjB?utm_source=generator" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="video">
+      <div class="container">
+        <div class="video-card glass-card">
+          <div class="section-header" style="margin-bottom:8px">
+            <span class="eyebrow">Vídeo</span>
+            <h2>Um momento especial</h2>
+          </div>
+          <div class="video-frame video-shell">
+            <video id="specialVideo" controls playsinline preload="metadata" poster="assets/video/thumb-video.jpg">
+              <source src="assets/video/video-homenagem.mp4" type="video/mp4">
+              Seu navegador não conseguiu carregar este vídeo.
+            </video>
+            <button class="video-play" id="videoPlayButton" type="button" aria-label="Reproduzir vídeo">
+              <span class="play-circle"><span class="play-triangle"></span></span>
+              <span class="play-text">Assistir vídeo</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Nada é pequeno se for feito com amor.
+    </footer>
+  </main>
+
+  <div class="floating-audio">
+    <button class="btn btn-secondary" id="floatingToggle">Pausar</button>
+    <button class="btn btn-secondary" id="floatingRestart">Recomeçar</button>
+  </div>
+
+  <audio id="audioPlayer" preload="auto"></audio>
+
+  <script>
+    const photos = [
+      'assets/photos/foto-01.jpeg','assets/photos/foto-02.jpeg','assets/photos/foto-03.jpeg','assets/photos/foto-04.jpeg','assets/photos/foto-05.jpeg','assets/photos/foto-06.jpeg','assets/photos/foto-07.jpeg','assets/photos/foto-08.jpeg','assets/photos/foto-09.jpeg','assets/photos/foto-10.jpeg','assets/photos/foto-11.jpeg','assets/photos/foto-12.jpeg','assets/photos/foto-13.jpeg','assets/photos/foto-14.jpeg','assets/photos/foto-15.jpeg','assets/photos/foto-16.jpeg','assets/photos/foto-17.jpeg','assets/photos/foto-18.jpeg'
+    ];
+
+    const heroPhotos = [photos[0], photos[1], photos[3], photos[5], photos[6]];
+
+    const tracks = [
+      {
+        name:'Woman — Mumford & Sons',
+        sources:[
+          'assets/audio/woman.mp3',
+          'assets/audio/Mumford & Sons - Woman - MumfordAndSonsVEVO (youtube).mp3',
+          'Mumford & Sons - Woman - MumfordAndSonsVEVO (youtube).mp3'
+        ]
+      },
+      {
+        name:'With Arms Wide Open — Creed',
+        sources:[
+          'assets/audio/with-arms-wide-open.mp3',
+          'assets/audio/Creed - With Arms Wide Open (Official HD Music Video) - CreedVEVO (youtube).mp3',
+          'Creed - With Arms Wide Open (Official HD Music Video) - CreedVEVO (youtube).mp3'
+        ]
+      }
+    ];
+    let currentSourceAttempt = 0;
+
+    const enterBtn = document.getElementById('enterBtn');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const trackTitle = document.getElementById('trackTitle');
+    const audioNote = document.getElementById('audioNote');
+    const toggleMusicBtn = document.getElementById('toggleMusicBtn');
+    const restartMusicBtn = document.getElementById('restartMusicBtn');
+    const floatingToggle = document.getElementById('floatingToggle');
+    const floatingRestart = document.getElementById('floatingRestart');
+
+    let currentTrack = 0;
+    let transitioningTrack = false;
+
+    function loadTrack(index){
+      currentTrack = index;
+      currentSourceAttempt = 0;
+      audioPlayer.src = tracks[index].sources[currentSourceAttempt];
+      audioPlayer.volume = .84;
+      trackTitle.textContent = tracks[index].name;
+    }
+
+    function syncAudioButtons(){
+      const paused = audioPlayer.paused;
+      toggleMusicBtn.textContent = paused ? 'Tocar música' : 'Pausar música';
+      floatingToggle.textContent = paused ? 'Tocar' : 'Pausar';
+    }
+
+    function playAudio(){
+      audioPlayer.play().then(() => {
+        audioNote.textContent = 'Música tocando em sequência durante a homenagem.';
+        syncAudioButtons();
+      }).catch(() => {
+        audioNote.textContent = 'A música ainda não carregou. Confira se os MP3s estão em assets/audio/ com os nomes corretos.';
+        syncAudioButtons();
+      });
+    }
+
+    function fadeToNextTrack(){
+      if(transitioningTrack) return;
+      transitioningTrack = true;
+      const fadeOut = setInterval(() => {
+        if(audioPlayer.volume > .07){
+          audioPlayer.volume = Math.max(0, audioPlayer.volume - .045);
+        } else {
+          clearInterval(fadeOut);
+          loadTrack((currentTrack + 1) % tracks.length);
+          audioPlayer.play().catch(() => {});
+          const fadeIn = setInterval(() => {
+            if(audioPlayer.volume < .8){
+              audioPlayer.volume = Math.min(.84, audioPlayer.volume + .045);
+            } else {
+              clearInterval(fadeIn);
+              transitioningTrack = false;
+              syncAudioButtons();
+            }
+          }, 120);
+        }
+      }, 120);
+    }
+
+    loadTrack(0);
+
+    enterBtn.addEventListener('click', () => {
+      document.body.classList.add('entered');
+      playAudio();
+      setTimeout(() => window.scrollTo({top:0, behavior:'smooth'}), 180);
+    });
+
+    audioPlayer.addEventListener('timeupdate', () => {
+      if(!audioPlayer.duration || transitioningTrack) return;
+      if(audioPlayer.duration - audioPlayer.currentTime <= 4.5) fadeToNextTrack();
+    });
+    audioPlayer.addEventListener('ended', fadeToNextTrack);
+    audioPlayer.addEventListener('pause', syncAudioButtons);
+    audioPlayer.addEventListener('play', syncAudioButtons);
+    audioPlayer.addEventListener('error', () => {
+      const list = tracks[currentTrack].sources;
+      if(currentSourceAttempt < list.length - 1){
+        currentSourceAttempt++;
+        audioPlayer.src = list[currentSourceAttempt];
+        playAudio();
+        return;
+      }
+      audioNote.textContent = 'Não encontrei o arquivo de áudio. Para tocar automaticamente, coloque os MP3s na pasta assets/audio/ ou use os nomes originais dos arquivos.';
+      syncAudioButtons();
+    });
+
+    function toggleAudio(){
+      if(audioPlayer.paused) playAudio(); else audioPlayer.pause();
+      syncAudioButtons();
+    }
+
+    function restartAudio(){
+      loadTrack(0);
+      playAudio();
+    }
+
+    toggleMusicBtn.addEventListener('click', toggleAudio);
+    floatingToggle.addEventListener('click', toggleAudio);
+    restartMusicBtn.addEventListener('click', restartAudio);
+    floatingRestart.addEventListener('click', restartAudio);
+
+    function buildHero(){
+      const hero = document.getElementById('heroSlider');
+      heroPhotos.forEach((src, index) => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = `Foto principal ${index + 1}`;
+        if(index === 0) img.classList.add('active');
+        hero.appendChild(img);
+      });
+      const imgs = [...hero.querySelectorAll('img')];
+      let index = 0;
+      setInterval(() => {
+        imgs[index].classList.remove('active');
+        index = (index + 1) % imgs.length;
+        imgs[index].classList.add('active');
+      }, 5200);
+    }
+
+    function buildGallery(){
+      const stage = document.getElementById('galleryStage');
+      const dots = document.getElementById('galleryDots');
+      const counter = document.getElementById('galleryCounter');
+      let active = 0;
+
+      photos.forEach((src, index) => {
+        const slide = document.createElement('div');
+        slide.className = index === 0 ? 'gallery-slide active' : 'gallery-slide';
+        slide.innerHTML = `<div class="slide-bg" style="background-image:url('${src}')"></div><img class="slide-img" src="${src}" alt="Foto ${index + 1}">`;
+        stage.appendChild(slide);
+
+        const dot = document.createElement('button');
+        dot.className = index === 0 ? 'dot active' : 'dot';
+        dot.setAttribute('aria-label', `Ir para foto ${index + 1}`);
+        dot.addEventListener('click', () => setGallery(index));
+        dots.appendChild(dot);
+      });
+
+      const slides = [...stage.querySelectorAll('.gallery-slide')];
+      const dotEls = [...dots.querySelectorAll('.dot')];
+
+      function setGallery(index){
+        slides[active].classList.remove('active');
+        dotEls[active].classList.remove('active');
+        active = index;
+        slides[active].classList.add('active');
+        dotEls[active].classList.add('active');
+        counter.textContent = `${active + 1} / ${photos.length}`;
+      }
+
+      counter.textContent = `1 / ${photos.length}`;
+      setInterval(() => setGallery((active + 1) % photos.length), 5600);
+    }
+
+    buildHero();
+    buildGallery();
+
+    const specialVideo = document.getElementById('specialVideo');
+    const videoShell = document.querySelector('.video-shell');
+    const videoPlayButton = document.getElementById('videoPlayButton');
+    if (specialVideo && videoShell && videoPlayButton) {
+      videoPlayButton.addEventListener('click', () => {
+        specialVideo.play();
+      });
+      specialVideo.addEventListener('play', () => videoShell.classList.add('is-playing'));
+      specialVideo.addEventListener('pause', () => videoShell.classList.remove('is-playing'));
+      specialVideo.addEventListener('ended', () => videoShell.classList.remove('is-playing'));
+    }
+  </script>
+</body>
+</html>
